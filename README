@@ -1,0 +1,31 @@
+MarshallJS
+
+A simple library for perorming actions based on media queries and basic functions.
+
+Usage:
+
+<script src="marshall.js></script>
+<script>
+  marshall.test("@media handheld", function() {
+    // Excecute this Javascript when on a handheld.
+  });
+
+  marshall.test("@media (min-device-width < 700)", function() {
+    // Execute this when the min device width < 700
+  });
+
+  marshall.test(function() { return window.navigator.userAgent.indexOf("ipad") > 0 ;  }, function() {});
+
+  // Only execute the first matching criteria 
+  marshal.firstOf([
+    { "test": "@media handheld", "callback": function() {}},
+    { "test": function() {}, "callback": function() {} }
+  ]);
+  
+  marshall.anyOf([
+
+  ]);
+
+  marshall.watch([]);
+
+</script>
