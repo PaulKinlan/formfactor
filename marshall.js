@@ -87,23 +87,41 @@ var marshall = function() {
     return matched;
   };
 
+  var createLinkElement = function(rel, href) {
+    var link = document.createElement("link");
+    link.rel = rel;
+    link.href = href;
+    return link;
+  };
+
+  var createScriptElement = function(src) {
+    var script = document.createElement("script");
+    script.src = src;
+    return script;
+  };
+
   var executeResult = function(opt) {
     var css, js;
     var callback = opt.callback || function() {};
     opt.css = opt.css || [];
     opt.js = opt.js || [];
 
-    for(var css_idx = 0; css = opt.css[css_idx]; css_idx++ ) {
-      var css_element = document.createElement("link");
-      css_element.rel = "stylesheet";
-      css_element.href = css;
-      document.head.append(css_element);
+    if(opt.css instanceOf "") {
+      document.head.append(createLinkElement("stylesheet", opt.css); 
     }
-    
-    for(var js_idx = 0; js = opt.js[js_idx]; js_idx++ ) {
-      var js_element = document.createElement("script");
-      js_element.src = js;
-      document.head.append(js_element);
+    else if(opt.css instanceOf []) {
+      for(var css_idx = 0; css = opt.css[css_idx]; css_idx++ ) {
+        document.head.append(createLinkElement("stylesheet", css); 
+      }
+    }
+
+    if(opt.js instanceOf "") {
+      document.head.append(createScriptElement(opt.js));
+    }
+    else if (opt.js instanceOf []) {
+      for(var js_idx = 0; js = opt.js[js_idx]; js_idx++ ) {
+        document.head.append(createScriptElement(js));
+      }
     }
 
     return callback();
