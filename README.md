@@ -8,26 +8,27 @@ MarshallJS is a simple library for perorming actions based on media queries and 
 
 Usage
 -----
-<script src="marshall.js"></script>
-<script>
-  var type = marshall.detect({
-    "tv": {
-      "css": ["/css/tv.css", "/css/fullscreen.css"],
-      "js": "/js/remote_control.js",
-      "callback": function() { alert("Look mum, I am on TV!"); }
-    },
-    "tablet": {
-      ...
-    }
-  },
-  // default callback when nothing matches. 
-  {
-    "css": "/css/plain.css",
-    "js": "/js/normal.js",
-    "callback": function() { alert("In plain mode.");}
-  });
-
-</script>
+        <script src="marshall.js"></script>
+        <script>
+          var type = marshall.detect({
+            "tv": {
+              "css": ["/css/tv.css", "/css/fullscreen.css"],
+              "js": "/js/remote_control.js",
+              "callback": function() { alert("Look mum, I am on TV!"); }
+            },
+            "tablet": {
+              ...
+            }
+          },
+          // default callback when nothing matches. 
+          {
+            "css": "/css/plain.css",
+            "js": "/js/normal.js",
+            "callback": function() { alert("In plain mode.");}
+          }
+        );
+       
+        </script>
 
 FAQ
 ---
