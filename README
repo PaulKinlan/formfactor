@@ -1,9 +1,13 @@
 MarshallJS
+==========
 
-A simple library for perorming actions based on media queries and basic functions.
+We already have feature detection frameworks and browser detection libraries,
+ but not a vast range of form-factor detection libraries.
 
-Usage:
+MarshallJS is a simple library for perorming actions based on media queries and basic functions and device profiles.
 
+Usage
+-----
 <script src="marshall.js></script>
 <script>
   
