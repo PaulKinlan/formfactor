@@ -1,4 +1,4 @@
-var marshall = function() {
+var formfactor = (function() {
   // Some Paul Irish magic
   if (!window.matchMedia){
     window.matchMedia = (function(doc, undefined){
@@ -31,55 +31,29 @@ var marshall = function() {
        };
     })(document);
   }
-  
-  function Matcher(query, callback) {
-     this.query = query;
-     this.callback = callback;
-  }
 
   var test_media = function(query) {
     var mql = matchMedia(query);
     return mql.matches;
   };
 
-  this.createMatcher = function(query, callback) {
-    return new Matcher(query, callback);
+  this.indicates = function(indicator) {
+    return (typeof(indicator) == "function" && indicator()) 
+        || (typeof(indicator) == "boolean" && indicator)
+        || (typeof(indicator) == "string" && test_media(indicator))
   };
 
-  this.test = function(query, callback) {
-    callback = callback || function() { return false; };
-    if(typeof(query) === "function" && query() == true) return callback();
-    if(test_media(query)) return callback();
-    return callback();
+  this.createIndicator = function(query) {
+    return function() { return test(query); };
   };
 
-  var partialTest = function(query) {
-    return function() { return test_media(query); };
-  };
+  // A collection of the formfactors and tests.
+  var formfactors = {};
 
-  var tests = {
-    hasTouch: function() { return (!!window.createTouchEvent); }
-  }
-
-  var features = { 
-    "tv": [
-      partialTest("tv"),
-      partialTest(function(){ return false; })
-    ],
-    "tablet": [
-    ],
-    "smartphone" : [
-
-    ],
-    "desktop": [
-      partialTest("screen")       
-    ]
-  };
-
-  var executeTests = function(device) {
-    var feats = features[device];
+  var isFormfactor = function(formfactor) {
+    var formfactor = formfactors[formfactor];
     var matched = false;
-    for(var f in feats) {
+    for(var f in formfactor) {
       matched = feats[f]();
       if(matched) break;
     }
@@ -97,29 +71,30 @@ var marshall = function() {
   var createScriptElement = function(src) {
     var script = document.createElement("script");
     script.src = src;
+
     return script;
   };
 
-  var executeResult = function(opt) {
+  var initializeFormfactor = function(action) {
     var css, js;
-    var callback = opt.callback || function() {};
-    opt.css = opt.css || [];
-    opt.js = opt.js || [];
+    var callback = action.callback || function() {};
+    action.css = opt.css || [];
+    action.js = opt.js || [];
 
-    if(opt.css instanceOf "") {
-      document.head.append(createLinkElement("stylesheet", opt.css); 
+    if(action.css instanceOf "") {
+      document.head.append(createLinkElement("stylesheet", action.css); 
     }
-    else if(opt.css instanceOf []) {
-      for(var css_idx = 0; css = opt.css[css_idx]; css_idx++ ) {
+    else if(action.css instanceOf []) {
+      for(var css_idx = 0; css = action.css[css_idx]; css_idx++ ) {
         document.head.append(createLinkElement("stylesheet", css); 
       }
     }
 
-    if(opt.js instanceOf "") {
-      document.head.append(createScriptElement(opt.js));
+    if(action.js instanceOf "") {
+      document.head.append(createScriptElement(action.js));
     }
-    else if (opt.js instanceOf []) {
-      for(var js_idx = 0; js = opt.js[js_idx]; js_idx++ ) {
+    else if (action.js instanceOf []) {
+      for(var js_idx = 0; js = action.js[js_idx]; js_idx++ ) {
         document.head.append(createScriptElement(js));
       }
     }
@@ -127,15 +102,33 @@ var marshall = function() {
     return callback();
   };
 
-  this.detect = function(opts, default_opts) {
-    default_opts = { "css": [], "opts": [], "callback": function() {} };
-    for(var device in opts) {
-      if(executeTests(device)) {
-        return executeResult(opts[device]);
+  this.is = function(type) {
+    var opts = {};
+    opts[type]={};
+    return this.detect(opts);
+  };
+
+  this.isnt = function(type) {
+    return !(this.is(type));
+  };
+
+  this.detect = function(formfactorActions, defaultFormfactorAction) {
+    defaultFormfactorAction = defaultFormfactorAction || { "css": [], "opts": [], "callback": function() {} };
+    
+    var formfactorAction;
+    for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
+      if(isFormfactor(formfactorAction.formfactor)) {
+        return executeFormfactorAction(formfactorAction);
       }
     };
 
-    return executeResult(default_opts);
+    return executeFormfactorAction(defaultFormfactorAction);
+  };
+
+  this.register = function(formfactor) {
+    for(var profile in profiles) {
+      features[profile] = profiles[profile]; 
+    }
   };
 
   this.firstOf = function(query) {
@@ -161,4 +154,4 @@ var marshall = function() {
       mql.addListener(callback);
     }
   };
-};
+})();

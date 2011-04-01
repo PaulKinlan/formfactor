@@ -8,16 +8,30 @@ MarshallJS is a simple library for perorming actions based on media queries and 
 
 Usage
 -----
-        <script src="marshall.js"></script>
+        <script src="formfactor.js"></script>
+        <script src="/formfactors/tv.js"></script>
         <script>
-          var type = marshall.detect({
-            "tv": {
+                     
+          (function() {
+            /* contents of tv.js */
+            formfactor.register(tv: [ 
+              "tv",
+              function() { return navigtor.indexOf("Samsung") > 0; },
+              (navigtor.indexOf("Samsung") > 0)
+            ]);
+          })();
+        </script>
+        <script>
+          var type = formfactor.detect([
+            {
+              "formfactor" : "tv",
               "css": ["/css/tv.css", "/css/fullscreen.css"],
               "js": "/js/remote_control.js",
               "callback": function() { alert("Look mum, I am on TV!"); }
             },
-            "tablet": {
-              ...
+            {
+              "formfactor": "tablet",
+                ...
             }
           },
           // default callback when nothing matches. 
@@ -28,6 +42,15 @@ Usage
           }
         );
        
+        </script>
+        <script>
+           if(formfactor.is("tv")) {
+             alert("Look ma, Im on tv!");
+           }
+
+           if(formfactor.isnt("tv")) {
+             alert("The revolution will not be televised");
+           }
         </script>
 
 FAQ
