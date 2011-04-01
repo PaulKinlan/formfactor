@@ -90,6 +90,8 @@ var marshall = function() {
   var executeResult = function(opt) {
     var css, js;
     var callback = opt.callback || function() {};
+    opt.css = opt.css || [];
+    opt.js = opt.js || [];
 
     for(var css_idx = 0; css = opt.css[css_idx]; css_idx++ ) {
       var css_element = document.createElement("link");
