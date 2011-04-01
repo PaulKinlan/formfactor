@@ -27,5 +27,20 @@ Usage:
   ]);
 
   marshall.watch([]);
+  
+  var type = marshall.detect({
+    "tv": {
+       "css": [],
+       "js": [],
+       "callback": function() {}
+    },
+    "tablet": {
+      ...
+    }
+  }, {
+    "css": [],
+    "js": [],
+    "callback": function() {}
+  });
 
 </script>
