@@ -11,7 +11,6 @@ Usage
         <script src="formfactor.js"></script>
         <script src="/formfactors/tv.js"></script>
         <script>
-                     
           (function() {
             /* contents of tv.js */
             formfactor.register(tv: [ 

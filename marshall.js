@@ -44,7 +44,7 @@ var formfactor = (function() {
   };
 
   this.createIndicator = function(query) {
-    return function() { return test(query); };
+    return function() { return indicates(query); };
   };
 
   // A collection of the formfactors and tests.
@@ -54,7 +54,7 @@ var formfactor = (function() {
     var formfactor = formfactors[formfactor];
     var matched = false;
     for(var f in formfactor) {
-      matched = feats[f]();
+      matched = indicates(formfactor[f]);
       if(matched) break;
     }
 
