@@ -21,12 +21,11 @@ Usage
           })();
         </script>
         <script>
-          var type = formfactor.detect([
+          var detectedFormfactor = formfactor.detect([
             {
               "formfactor" : "tv",
-              "links": ["/css/tv.css", "/css/fullscreen.css"],
-              "js": "/js/remote_control.js",
-              "callback": function() { alert("Look mum, I am on TV!"); }
+              "resources": ["/css/tv.css", "/css/fullscreen.css", "/js/remote_control.js"],
+              "callbacks": function(f) { alert("Look mum, I am on " + f +"!"); }
             },
             {
               "formfactor": "tablet",
@@ -35,9 +34,8 @@ Usage
           },
           // default callback when nothing matches. 
           {
-            "links": "/css/plain.css",
-            "js": "/js/normal.js",
-            "callback": function() { alert("In plain mode.");}
+            "links": ["/css/plain.css","/js/normal.js"],
+            "callbacks": function() { alert("In plain mode.");}
           }
         );
        

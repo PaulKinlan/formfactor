@@ -32,18 +32,34 @@
     })(document);
   }
 
-  var linkDefaults = {
+  var resourceDefaults = {
     excss: {
+      tag: "link",
       rel: "stylesheet",
+      urlKind: "href",
       type: "text/excss"
     },
     less: {
+      tag: "link",
       rel: "stylesheet/less",
+      urlKind: "href",
       type: "text/css"
     },
     css: {
+      tag: "link",
       rel: "stylesheet",
+      urlKind: "href",
       type: "text/css"
+    },
+    js: {
+      tag: "script",
+      urlKind: "src",
+      type: "text/javascript"
+    },
+    coffee: {
+      tag: "script",
+      urlKind: "src",
+      type: "text/coffescript"
     }
   }
 
@@ -71,57 +87,47 @@
     return false;
   };
 
-  var createLinkElement = function(href) {
-    var link = document.createElement("link");
-
-    // detect the file type.
+  var createTag = function(href) {
     var extension = href.substring(href.lastIndexOf(".") + 1); 
-    if(!!linkDefaults[extension] == false) extension = "css";
-    var linkType = linkDefaults[extension];
-    link.rel = linkType.rel;
-    link.type = linkType.type;
-    link.href = href;
-    return link;
-  };
+    var resourceType = resourceDefaults[extension];
+    var tag = document.createElement(resourceType.tag);
+    
+    if(resourceType.rel) tag.rel = resourceType.rel; 
+    if(resourceType.type) tag.type = resourceType.type;
+    tag[resourceType.urlKind] = href;
 
-  var createScriptElement = function(src) {
-    var script = document.createElement("script");
-    script.src = src;
-
-    return script;
+    return tag;
   };
 
   var initializeFormfactor = function(action) {
-    var css, js;
-    var callback = action.callback || function() {};
-    action.links = action.links || [];
-    action.js = action.js || [];
+    action.callbacks = action.callbacks || function() {};
+    action.resources = action.resources || [];
 
-    if(typeof(action.links) === "string") {
-      document.head.appendChild(createLinkElement(action.links)); 
+    if(typeof(action.resources) === "string") {
+      document.head.appendChild(createTag(action.resources)); 
     }
-    else if(action.link instanceof Array) {
-      for(var link_idx = 0; link = action.links[link_idx]; link_idx++ ) {
-        document.head.appendChild(createLinkElement(link)); 
+    else if(action.resources instanceof Array) {
+      var resource;
+      for(var resource_idx = 0; resource = action.resources[resource_idx]; resource_idx++ ) {
+        document.head.appendChild(createTag(resource)); 
       }
     }
-
-    if(typeof(action.js) === "string") {
-      document.head.appendChild(createScriptElement(action.js));
+   
+    if(typeof(action.callbacks) === "function") {
+      action.callbacks(action.formfactor);
     }
-    else if (action.js instanceof Array) {
-      for(var js_idx = 0; js = action.js[js_idx]; js_idx++ ) {
-        document.head.appendChild(createScriptElement(js));
+    else if (action.callbacks instanceof Array) {
+      var callback;
+      for(var cb_idx = 0; callback = action.callbacks; cb_idx++) {
+        callback(action.formfactor);
       }
     }
-
-    return callback();
   };
 
   var is = function(type) {
     var opts = {};
     opts[type]={};
-    return detect(opts);
+    return (detect(opts) == type);
   };
 
   var isnt = function(type) {
@@ -129,16 +135,18 @@
   };
 
   var detect = function(formfactorActions, defaultFormfactorAction) {
-    defaultFormfactorAction = defaultFormfactorAction || { "css": [], "opts": [], "callback": function() {} };
+    defaultFormfactorAction = defaultFormfactorAction || { "resources": [], "callbacks": function() {} };
     
     var formfactorAction;
     for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
       if(isFormfactor(formfactorAction.formfactor)) {
-        return initializeFormfactor(formfactorAction);
+        initializeFormfactor(formfactorAction);
+        return formfactorAction.formfactor;
       }
     };
 
-    return initializeFormfactor(defaultFormfactorAction);
+    initializeFormfactor(defaultFormfactorAction);
+    return "";
   };
 
   var register = function(formfactor) {
