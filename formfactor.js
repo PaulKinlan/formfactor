@@ -42,7 +42,7 @@
       type: "text/css"
     },
     css: {
-      rel: "stylsheet",
+      rel: "stylesheet",
       type: "text/css"
     }
   }
