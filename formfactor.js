@@ -1,4 +1,4 @@
-var formfactor = (function() {
+var formfactor = new (function() {
   // Some Paul Irish magic
   if (!window.matchMedia){
     window.matchMedia = (function(doc, undefined){
@@ -76,19 +76,19 @@ var formfactor = (function() {
     action.css = action.css || [];
     action.js = action.js || [];
 
-    if(action.css instanceof "") {
+    if(action.css instanceof String) {
       document.head.append(createLinkElement("stylesheet", action.css)); 
     }
-    else if(action.css instanceof []) {
+    else if(action.css instanceof Array) {
       for(var css_idx = 0; css = action.css[css_idx]; css_idx++ ) {
         document.head.append(createLinkElement("stylesheet", css)); 
       }
     }
 
-    if(action.js instanceof "") {
+    if(action.js instanceof String) {
       document.head.append(createScriptElement(action.js));
     }
-    else if (action.js instanceof []) {
+    else if (action.js instanceof Array) {
       for(var js_idx = 0; js = action.js[js_idx]; js_idx++ ) {
         document.head.append(createScriptElement(js));
       }
@@ -113,11 +113,11 @@ var formfactor = (function() {
     var formfactorAction;
     for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
       if(isFormfactor(formfactorAction.formfactor)) {
-        return executeFormfactorAction(formfactorAction);
+        return initializeFormfactor(formfactorAction);
       }
     };
 
-    return executeFormfactorAction(defaultFormfactorAction);
+    return initializeFormfactor(defaultFormfactorAction);
   };
 
   this.register = function(formfactor) {
@@ -127,7 +127,7 @@ var formfactor = (function() {
   };
 
   this.firstOf = function(query) {
-    if(!(query instanceof [])) throw "error";
+    if(!(query instanceof Array)) throw "error";
 
     for(var m = 0; m < query.length; m++) {
       if(test_media(query[m].query)) query[m].callback(); 
@@ -136,7 +136,7 @@ var formfactor = (function() {
   };
 
   this.anyOf = function(query) {
-    if(!(query instanceof [])) throw "error";
+    if(!(query instanceof Array)) throw "error";
 
     for(var m = 0; m < query.length; m++) {
       if(test_media(query[m].query)) query[m].callback(); 
