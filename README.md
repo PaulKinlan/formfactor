@@ -24,7 +24,7 @@ Usage
           var type = formfactor.detect([
             {
               "formfactor" : "tv",
-              "css": ["/css/tv.css", "/css/fullscreen.css"],
+              "links": ["/css/tv.css", "/css/fullscreen.css"],
               "js": "/js/remote_control.js",
               "callback": function() { alert("Look mum, I am on TV!"); }
             },
@@ -35,7 +35,7 @@ Usage
           },
           // default callback when nothing matches. 
           {
-            "css": "/css/plain.css",
+            "links": "/css/plain.css",
             "js": "/js/normal.js",
             "callback": function() { alert("In plain mode.");}
           }

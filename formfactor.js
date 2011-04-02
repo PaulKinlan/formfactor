@@ -32,7 +32,22 @@
     })(document);
   }
 
-  var test_media = function(query) {
+  var linkDefaults = {
+    excss: {
+      rel: "stylesheet",
+      type: "text/excss"
+    },
+    less: {
+      rel: "stylesheet/less",
+      type: "text/css"
+    },
+    css: {
+      rel: "stylsheet",
+      type: "text/css"
+    }
+  }
+
+  var testMedia = function(query) {
     var mql = matchMedia(query);
     return mql.matches;
   };
@@ -40,7 +55,7 @@
   var indicates = function(indicator) {
     return (typeof(indicator) == "function" && indicator()) 
         || (typeof(indicator) == "boolean" && indicator)
-        || (typeof(indicator) == "string" && test_media(indicator))
+        || (typeof(indicator) == "string" && testMedia(indicator))
   };
 
   // A collection of the formfactors and tests.
@@ -56,9 +71,15 @@
     return false;
   };
 
-  var createLinkElement = function(rel, href) {
+  var createLinkElement = function(href) {
     var link = document.createElement("link");
-    link.rel = rel;
+
+    // detect the file type.
+    var extension = href.substring(href.lastIndexOf(".") + 1); 
+    if(!!linkDefaults[extension] == false) extension = "css";
+    var linkType = linkDefaults[extension];
+    link.rel = linkType.rel;
+    link.type = linkType.type;
     link.href = href;
     return link;
   };
@@ -73,15 +94,15 @@
   var initializeFormfactor = function(action) {
     var css, js;
     var callback = action.callback || function() {};
-    action.css = action.css || [];
+    action.links = action.links || [];
     action.js = action.js || [];
 
-    if(typeof(action.css) === "string") {
-      document.head.appendChild(createLinkElement("stylesheet", action.css)); 
+    if(typeof(action.links) === "string") {
+      document.head.appendChild(createLinkElement(action.links)); 
     }
-    else if(action.css instanceof Array) {
-      for(var css_idx = 0; css = action.css[css_idx]; css_idx++ ) {
-        document.head.appendChild(createLinkElement("stylesheet", css)); 
+    else if(action.link instanceof Array) {
+      for(var link_idx = 0; link = action.links[link_idx]; link_idx++ ) {
+        document.head.appendChild(createLinkElement(link)); 
       }
     }
 
@@ -126,7 +147,6 @@
     }
   };
   
-  debugger; 
   window.formfactor = {
     "register": register,
     "detect": detect,
