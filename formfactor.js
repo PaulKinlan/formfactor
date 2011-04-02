@@ -76,19 +76,19 @@ var formfactor = (function() {
     action.css = action.css || [];
     action.js = action.js || [];
 
-    if(action.css instanceOf "") {
+    if(action.css instanceof "") {
       document.head.append(createLinkElement("stylesheet", action.css)); 
     }
-    else if(action.css instanceOf []) {
+    else if(action.css instanceof []) {
       for(var css_idx = 0; css = action.css[css_idx]; css_idx++ ) {
         document.head.append(createLinkElement("stylesheet", css)); 
       }
     }
 
-    if(action.js instanceOf "") {
+    if(action.js instanceof "") {
       document.head.append(createScriptElement(action.js));
     }
-    else if (action.js instanceOf []) {
+    else if (action.js instanceof []) {
       for(var js_idx = 0; js = action.js[js_idx]; js_idx++ ) {
         document.head.append(createScriptElement(js));
       }
