@@ -1,4 +1,4 @@
-var formfactor = new (function() {
+(function() {
   // Some Paul Irish magic
   if (!window.matchMedia){
     window.matchMedia = (function(doc, undefined){
@@ -37,7 +37,7 @@ var formfactor = new (function() {
     return mql.matches;
   };
 
-  this.indicates = function(indicator) {
+  var indicates = function(indicator) {
     return (typeof(indicator) == "function" && indicator()) 
         || (typeof(indicator) == "boolean" && indicator)
         || (typeof(indicator) == "string" && test_media(indicator))
@@ -50,7 +50,7 @@ var formfactor = new (function() {
     var indicators = formfactorIndicators[formfactor];
     var indicator;
     for(var i = 0; indicator = indicators[i]; i++) {
-      if (this.indicates(indicator)) return true;
+      if (indicates(indicator)) return true;
     }
 
     return false;
@@ -76,38 +76,38 @@ var formfactor = new (function() {
     action.css = action.css || [];
     action.js = action.js || [];
 
-    if(action.css instanceof String) {
-      document.head.append(createLinkElement("stylesheet", action.css)); 
+    if(typeof(action.css) === "string") {
+      document.head.appendChild(createLinkElement("stylesheet", action.css)); 
     }
     else if(action.css instanceof Array) {
       for(var css_idx = 0; css = action.css[css_idx]; css_idx++ ) {
-        document.head.append(createLinkElement("stylesheet", css)); 
+        document.head.appendChild(createLinkElement("stylesheet", css)); 
       }
     }
 
-    if(action.js instanceof String) {
-      document.head.append(createScriptElement(action.js));
+    if(typeof(action.js) === "string") {
+      document.head.appendChild(createScriptElement(action.js));
     }
     else if (action.js instanceof Array) {
       for(var js_idx = 0; js = action.js[js_idx]; js_idx++ ) {
-        document.head.append(createScriptElement(js));
+        document.head.appendChild(createScriptElement(js));
       }
     }
 
     return callback();
   };
 
-  this.is = function(type) {
+  var is = function(type) {
     var opts = {};
     opts[type]={};
-    return this.detect(opts);
+    return detect(opts);
   };
 
-  this.isnt = function(type) {
-    return !(this.is(type));
+  var isnt = function(type) {
+    return !(is(type));
   };
 
-  this.detect = function(formfactorActions, defaultFormfactorAction) {
+  var detect = function(formfactorActions, defaultFormfactorAction) {
     defaultFormfactorAction = defaultFormfactorAction || { "css": [], "opts": [], "callback": function() {} };
     
     var formfactorAction;
@@ -120,33 +120,17 @@ var formfactor = new (function() {
     return initializeFormfactor(defaultFormfactorAction);
   };
 
-  this.register = function(formfactor) {
+  var register = function(formfactor) {
     for(var form in formfactor) {
       formfactorIndicators[form] = formfactor[form]; 
     }
   };
-
-  this.firstOf = function(query) {
-    if(!(query instanceof Array)) throw "error";
-
-    for(var m = 0; m < query.length; m++) {
-      if(test_media(query[m].query)) query[m].callback(); 
-      return;
-    } 
-  };
-
-  this.anyOf = function(query) {
-    if(!(query instanceof Array)) throw "error";
-
-    for(var m = 0; m < query.length; m++) {
-      if(test_media(query[m].query)) query[m].callback(); 
-    } 
-  };
-
-  this.watch = function(query, callback) {
-    var mql = matchMedia(query);
-    if(mql.matches) {
-      mql.addListener(callback);
-    }
+  
+  debugger; 
+  window.formfactor = {
+    "register": register,
+    "detect": detect,
+    "is": is,
+    "isnt": isnt
   };
 })();
