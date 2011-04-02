@@ -13,11 +13,11 @@ Usage
         <script>
           (function() {
             /* contents of tv.js */
-            formfactor.register(tv: [ 
+            formfactor.register({tv: [ 
               "tv",
               function() { return navigtor.indexOf("Samsung") > 0; },
               (navigtor.indexOf("Samsung") > 0)
-            ]);
+            ]
           })();
         </script>
         <script>

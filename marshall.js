@@ -43,22 +43,17 @@ var formfactor = (function() {
         || (typeof(indicator) == "string" && test_media(indicator))
   };
 
-  this.createIndicator = function(query) {
-    return function() { return indicates(query); };
-  };
-
   // A collection of the formfactors and tests.
-  var formfactors = {};
+  var formfactorIndicators = {};
 
   var isFormfactor = function(formfactor) {
-    var formfactor = formfactors[formfactor];
-    var matched = false;
-    for(var f in formfactor) {
-      matched = indicates(formfactor[f]);
-      if(matched) break;
+    var indicators = formfactorIndicators[formfactor];
+    var indicator;
+    for(var i = 0; indicator = indicators[i]; i++) {
+      if (this.indicates(indicator)) return true;
     }
 
-    return matched;
+    return false;
   };
 
   var createLinkElement = function(rel, href) {
@@ -78,8 +73,8 @@ var formfactor = (function() {
   var initializeFormfactor = function(action) {
     var css, js;
     var callback = action.callback || function() {};
-    action.css = opt.css || [];
-    action.js = opt.js || [];
+    action.css = action.css || [];
+    action.js = action.js || [];
 
     if(action.css instanceOf "") {
       document.head.append(createLinkElement("stylesheet", action.css); 
@@ -126,8 +121,8 @@ var formfactor = (function() {
   };
 
   this.register = function(formfactor) {
-    for(var profile in profiles) {
-      features[profile] = profiles[profile]; 
+    for(var form in formfactor) {
+      formfactorIndicators[form] = formfactor[form]; 
     }
   };
 
