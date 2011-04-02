@@ -77,11 +77,11 @@ var formfactor = (function() {
     action.js = action.js || [];
 
     if(action.css instanceOf "") {
-      document.head.append(createLinkElement("stylesheet", action.css); 
+      document.head.append(createLinkElement("stylesheet", action.css)); 
     }
     else if(action.css instanceOf []) {
       for(var css_idx = 0; css = action.css[css_idx]; css_idx++ ) {
-        document.head.append(createLinkElement("stylesheet", css); 
+        document.head.append(createLinkElement("stylesheet", css)); 
       }
     }
 
