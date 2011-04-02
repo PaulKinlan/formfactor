@@ -122,6 +122,12 @@
         callback(action.formfactor);
       }
     }
+
+    if(document.querySelector) {
+      var html = document.querySelector("html");
+      html.classList.add(action.formfactor);
+    }
+
   };
 
   var is = function(type) {
