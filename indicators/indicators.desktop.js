@@ -1,0 +1,3 @@
+formfactor.register({"desktop": [ 
+  "screen",
+]});
