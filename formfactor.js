@@ -140,16 +140,38 @@
     return !(is(type));
   };
 
+  var getOverrideCookie = function() {
+    // Based on the work of ppk
+    var nameEQ = "__formfactorJSOverride=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  };
+
   var detect = function(formfactorActions, defaultFormfactorAction) {
     defaultFormfactorAction = defaultFormfactorAction || { "resources": [], "callbacks": function() {} };
-    
     var formfactorAction;
-    for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
-      if(isFormfactor(formfactorAction.formfactor)) {
-        initializeFormfactor(formfactorAction);
-        return formfactorAction.formfactor;
+    var formfactorOverride = getOverrideCookie();
+    if(!!formfactorOverride) {
+      for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
+        if(isFormfactor(formfactorAction.formfactor)) {
+          initializeFormfactor(formfactorAction);
+          return formfactorAction.formfactor;
+        }
+      };
+    }
+    else {
+      for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
+        if(formfactorAction.formfactor == formfactorOverride) {
+          initializeFormfactor(formfactorAction);
+          return formfactorAction.formfactor;
+        }
       }
-    };
+    }
 
     initializeFormfactor(defaultFormfactorAction);
     return "";
