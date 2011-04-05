@@ -156,7 +156,7 @@
     defaultFormfactorAction = defaultFormfactorAction || { "resources": [], "callbacks": function() {} };
     var formfactorAction;
     var formfactorOverride = getOverrideCookie();
-    if(!!formfactorOverride) {
+    if(!!formfactorOverride == false) {
       for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
         if(isFormfactor(formfactorAction.formfactor)) {
           initializeFormfactor(formfactorAction);
