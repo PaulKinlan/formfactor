@@ -87,10 +87,10 @@
     return false;
   };
 
-  var createTag = function(href) {
+  var createTag = function(href, tagName, rel, urlKind, type) {
     var extension = href.substring(href.lastIndexOf(".") + 1); 
-    var resourceType = resourceDefaults[extension];
-    var tag = document.createElement(resourceType.tag);
+    var resourceType = resourceDefaults[extension] || { type: type, rel: rel, urlKind: urlKind  };
+    var tag = document.createElement(resourceType.tag || tagName);
     
     if(resourceType.rel) tag.rel = resourceType.rel; 
     if(resourceType.type) tag.type = resourceType.type;
@@ -109,7 +109,12 @@
     else if(action.resources instanceof Array) {
       var resource;
       for(var resource_idx = 0; resource = action.resources[resource_idx]; resource_idx++ ) {
-        document.head.appendChild(createTag(resource)); 
+        if(typeof(resource) === "string") {
+          document.head.appendChild(createTag(resource)); 
+        }
+        else {
+          document.head.appendChild(createTag(resource.href, resource.tag, resource.rel, resource.urlKind, resource.type));
+        }
       }
     }
    
