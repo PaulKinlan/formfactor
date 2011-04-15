@@ -158,17 +158,20 @@
   };
 
   var setOverrideCookie = function(formfactorName) {
-    document.cookie = nameEQ + "=" + formfactorName;
+    document.cookie = nameEQ + formfactorName;
   };
 
-  var detect = function(formfactorActions, defaultFormfactorAction) {
+  var detect = function(formfactorActions, defaultFormfactorAction, callback) {
     defaultFormfactorAction = defaultFormfactorAction || { "resources": [], "callbacks": function() {} };
+    callback = callback || function() {};
+    
     var formfactorAction;
     var formfactorOverride = getOverrideCookie();
     if(!!formfactorOverride == false) {
       for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
         if(isFormfactor(formfactorAction.formfactor)) {
           initializeFormfactor(formfactorAction);
+          callback(formfactorAction.formfactor);
           return formfactorAction.formfactor;
         }
       };
@@ -177,13 +180,15 @@
       for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
         if(formfactorAction.formfactor == formfactorOverride) {
           initializeFormfactor(formfactorAction);
+          callback(formfactorAction.formfactor);
           return formfactorAction.formfactor;
         }
       }
     }
 
     initializeFormfactor(defaultFormfactorAction);
-    return "";
+    callback();
+    return;
   };
 
   var register = function(formfactor) {
@@ -201,7 +206,7 @@
   };
 
   var override = function(formfactor) {
-    if(formfactorIndicators[formfactor]) throw "Unknown Formfactor";
+    if(!!formfactorIndicators[formfactor] == false) throw "Unknown Formfactor";
     setOverrideCookie(formfactor) 
   };
   
