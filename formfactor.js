@@ -157,8 +157,11 @@
     return null;
   };
 
-  var setOverrideCookie = function(formfactorName) {
-    document.cookie = nameEQ + formfactorName;
+  var setOverrideCookie = function(formfactorName, overrideParams) { 
+    var cookie = nameEQ + formfactorName ;
+    if(overrideParams.domain) cookie += "; Domain=" + overrideParams.domain;
+    if(overrideParams.path) cookie += "; Path=" + overrideParmas.path;
+    document.cookie = nameEQ + formfactorName + ";;
   };
 
   var detect = function(formfactorActions, defaultFormfactorAction, callback) {
@@ -205,9 +208,9 @@
     return formfactors;
   };
 
-  var override = function(formfactor) {
+  var override = function(formfactor, overrideParams) {
     if(!!formfactorIndicators[formfactor] == false) throw "Unknown Formfactor";
-    setOverrideCookie(formfactor) 
+    setOverrideCookie(formfactor, overrideParams); 
   };
   
   window.formfactor = {
