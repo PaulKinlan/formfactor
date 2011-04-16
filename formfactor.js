@@ -161,7 +161,7 @@
     var cookie = nameEQ + formfactorName ;
     if(overrideParams.domain) cookie += "; Domain=" + overrideParams.domain;
     if(overrideParams.path) cookie += "; Path=" + overrideParmas.path;
-    document.cookie = nameEQ + formfactorName + ";;
+    document.cookie = cookie; 
   };
 
   var detect = function(formfactorActions, defaultFormfactorAction, callback) {
