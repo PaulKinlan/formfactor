@@ -160,7 +160,7 @@
   var setOverrideCookie = function(formfactorName, overrideParams) { 
     var cookie = nameEQ + formfactorName ;
     if(overrideParams.domain) cookie += "; Domain=" + overrideParams.domain;
-    if(overrideParams.path) cookie += "; Path=" + overrideParmas.path;
+    if(overrideParams.path) cookie += "; Path=" + overrideParams.path;
     document.cookie = cookie; 
   };
 
