@@ -100,9 +100,38 @@
     return tag;
   };
 
+  var scriptManager = function() {
+    var scripts = [];
+    var currentScript;
+
+    this.enqueue = function(script) {
+      scripts.push(script);
+      if(!!currentScript == false) {
+        currentScript = scripts.shift();
+        this.download();
+      }
+    };
+
+    var download = this.download = function() {
+      currentScript.onload = currentScript.onreadystatechange =  onComplete;
+      document.head.appendChild(currentScript);
+    };
+
+    var onComplete = function(e) {
+      if(e.type != "load" && currentScript.readyState != 'complete' && currentScript.readyState != 'loaded') return;
+      // Pick the next script
+      currentScript = scripts.shift();
+      if(currentScript) {
+        download();
+      } 
+    };
+  };
+
   var initializeFormfactor = function(action) {
     action.callbacks = action.callbacks || function() {};
     action.resources = action.resources || [];
+    
+    var scripts = new scriptManager();
 
     if(typeof(action.resources) === "string") {
       document.head.appendChild(createTag(action.resources)); 
@@ -110,11 +139,19 @@
     else if(action.resources instanceof Array) {
       var resource;
       for(var resource_idx = 0; resource = action.resources[resource_idx]; resource_idx++ ) {
+        var tag; 
         if(typeof(resource) === "string") {
-          document.head.appendChild(createTag(resource)); 
+          tag = createTag(resource); 
         }
         else {
-          document.head.appendChild(createTag(resource.href, resource.tag, resource.rel, resource.urlKind, resource.type));
+          tag = createTag(resource.href, resource.tag, resource.rel, resource.urlKind, resource.type);
+        }
+
+        if(tag.localName == "script") {
+          scripts.enqueue(tag);
+        }
+        else {
+          document.head.appendChild(tag);
         }
       }
     }
@@ -133,7 +170,6 @@
       var html = document.querySelector("html");
       html.classList.add(action.formfactor);
     }
-
   };
 
   var is = function(type) {
