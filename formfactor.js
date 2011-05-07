@@ -75,6 +75,7 @@
         || (typeof(indicator) == "string" && testMedia(indicator))
   };
 
+  var head = (document.head || document.getElementsByTagName("head")[0]);
   // A collection of the formfactors and tests.
   var formfactorIndicators = {};
 
@@ -114,7 +115,7 @@
 
     var download = this.download = function() {
       currentScript.onload = currentScript.onreadystatechange =  onComplete;
-      document.head.appendChild(currentScript);
+      head.appendChild(currentScript);
     };
 
     var onComplete = function(e) {
@@ -134,7 +135,7 @@
     var scripts = new scriptManager();
 
     if(typeof(action.resources) === "string") {
-      document.head.appendChild(createTag(action.resources)); 
+      head.appendChild(createTag(action.resources)); 
     }
     else if(action.resources instanceof Array) {
       var resource;
@@ -151,7 +152,7 @@
           scripts.enqueue(tag);
         }
         else {
-          document.head.appendChild(tag);
+          head.appendChild(tag);
         }
       }
     }
@@ -168,7 +169,8 @@
 
     if(document.querySelector) {
       var html = document.querySelector("html");
-      html.classList.add(action.formfactor);
+      if(html.classList)
+        html.classList.add(action.formfactor);
     }
   };
 
@@ -216,11 +218,13 @@
       };
     }
     else {
-      for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
-        if(formfactorAction.formfactor == formfactorOverride) {
-          initializeFormfactor(formfactorAction);
-          callback(formfactorAction.formfactor);
-          return formfactorAction.formfactor;
+      if(formfactorOverride != "default") {
+        for(var i = 0; formfactorAction = formfactorActions[i]; i++) {
+          if(formfactorAction.formfactor == formfactorOverride) {
+            initializeFormfactor(formfactorAction);
+            callback(formfactorAction.formfactor);
+            return formfactorAction.formfactor;
+          }
         }
       }
     }
